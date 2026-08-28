@@ -1,8 +1,8 @@
 package com.example.calculator.model;
 
 public class CalculationResponse {
-    private String operation;
-    private double a, b, result;
+    private final String operation;
+    private final double a, b, result;
 
     public CalculationResponse(String operation, double a, double b, double result) {
         this.operation = operation;
