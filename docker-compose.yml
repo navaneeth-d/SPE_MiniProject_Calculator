@@ -1,0 +1,38 @@
+services:
+  calculator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${IMAGE_NAME:-calculator:local}
+    pull_policy: build
+    environment:
+      SERVER_PORT: "8080"
+      MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED: "true"
+    expose:
+      - "8080"
+    networks:
+      - calculator-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 40s
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - calculator-network
+    depends_on:
+      calculator:
+        condition: service_healthy
+    restart: unless-stopped
+
+networks:
+  calculator-network:
+    driver: bridge

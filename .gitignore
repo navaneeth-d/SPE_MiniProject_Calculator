@@ -1,6 +1,11 @@
 .vscode
 .github
 .mvn
+.idea/
+.env
+.env.*
+!.env.example
+.DS_Store
 
 HELP.md
 target/

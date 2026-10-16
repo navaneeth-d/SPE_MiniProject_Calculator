@@ -23,7 +23,10 @@ FROM eclipse-temurin:26-jre
 
 WORKDIR /app
 
-RUN groupadd --system appgroup \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --system appgroup \
     && useradd --system --gid appgroup appuser
 
 COPY --from=builder --chown=appuser:appgroup \
@@ -34,3 +37,4 @@ USER appuser
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+
