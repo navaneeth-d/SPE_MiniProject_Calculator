@@ -6,11 +6,10 @@ pipeline {
         IMAGE_NAME           = "${DOCKERHUB_REPOSITORY}:v${BUILD_NUMBER}"
         LATEST_IMAGE         = "${DOCKERHUB_REPOSITORY}:latest"
         DOCKERHUB_CREDS_ID   = 'dockerhub_credentials'
-        NOTIFICATION_EMAIL = credentials('notification_email')
+        NOTIFICATION_EMAIL   = credentials('notification_email')        //  use Jenkins credentials for storing email id
         HOST_PORT            = '8081'
         COMPOSE_PROJECT_NAME = 'calculator'
-        JAVA_HOME = '/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home'
-        PATH = "${JAVA_HOME}/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/Applications/Docker.app/Contents/Resources/bin:${env.PATH}:/usr/bin:/usr/sbin:/sbin"
+        // Configured PATH and JAVA_HOME inside Jenkins->Node
     }
 
     options {
