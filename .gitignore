@@ -1,6 +1,5 @@
 .vscode
 .github
-.mvn
 .idea/
 .env
 .env.*
