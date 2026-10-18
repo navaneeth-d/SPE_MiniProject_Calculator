@@ -94,27 +94,25 @@ pipeline {
                     usernameVariable: 'DH_USER',
                     passwordVariable: 'DH_PASS'
                 )]) {
-                    // Single-quoted so Groovy never interpolates the secret.
                     sh '''
                         set -eu
 
-                        # Use the existing Docker daemon.
-                        DOCKER_HOST="$(docker context inspect --format '{{.Endpoints.docker.Host}}')"
-                        export DOCKER_HOST
-
-                        # Use isolated, temporary credentials for this pipeline.
+                        # Create an isolated Docker credential configuration.
                         DOCKER_CONFIG="$(mktemp -d)"
                         export DOCKER_CONFIG
 
-                        # Always remove temporary credentials, even if a command fails.
-                        trap 'docker logout >/dev/null 2>&1 || true; rm -rf "$DOCKER_CONFIG"' EXIT
+                        # Always remove the temporary credentials, even on failure.
+                        trap 'rm -rf "$DOCKER_CONFIG"' EXIT
 
+                        # Authenticate using credentials provided in Jenkins, only in this temporary config.
                         echo "$DH_PASS" | docker login \
                             --username "$DH_USER" \
                             --password-stdin
 
-                        docker push "${IMAGE_NAME}"
-                        docker push "${LATEST_IMAGE}"
+                        # Push the image.
+                        docker push "$IMAGE_NAME"
+
+                        echo "Docker image pushed successfully."
                     '''
                 }
             }
