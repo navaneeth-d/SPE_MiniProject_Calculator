@@ -74,6 +74,19 @@ pipeline {
             }
         }
 
+        stage('Coverage Report') {
+            steps {
+                sh './mvnw -B -ntp jacoco:report'
+
+                recordCoverage(
+                    tools: [[
+                        parser: 'JACOCO',
+                        pattern: 'target/site/jacoco/jacoco.xml'
+                    ]]
+                )
+            }
+        }
+
         stage('Docker Build') {
             steps {
                 sh '''
