@@ -25,18 +25,6 @@ pipeline {
     }
 
     stages {
-
-        stage('Checkout') {
-            steps {
-                script {
-                    def scmVars = checkout scm
-                    env.GIT_COMMIT_SHORT = scmVars.GIT_COMMIT.take(7)
-                    env.GIT_COMMIT_MSG = sh(returnStdout: true, script: 'git log -1 --pretty=%s').trim()
-                }
-                echo "Commit ${env.GIT_COMMIT_SHORT}: ${env.GIT_COMMIT_MSG}"
-            }
-        }
-
         stage('Preflight') {
             steps {
                 sh '''
@@ -49,6 +37,17 @@ pipeline {
                     docker compose config --quiet
                     echo "Preflight OK"
                 '''
+            }
+        }
+        
+        stage('Checkout') {
+            steps {
+                script {
+                    def scmVars = checkout scm
+                    env.GIT_COMMIT_SHORT = scmVars.GIT_COMMIT.take(7)
+                    env.GIT_COMMIT_MSG = sh(returnStdout: true, script: 'git log -1 --pretty=%s').trim()
+                }
+                echo "Commit ${env.GIT_COMMIT_SHORT}: ${env.GIT_COMMIT_MSG}"
             }
         }
 

@@ -1,4 +1,4 @@
-# Calculator REST API & CI/CD Pipeline
+# End-to-End CI/CD Pipeline for a Calculator REST API
 
 
 [![Java](https://img.shields.io/badge/Java-21-orange.svg?logo=openjdk)](https://openjdk.org/)
