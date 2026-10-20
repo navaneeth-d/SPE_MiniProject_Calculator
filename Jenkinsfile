@@ -32,14 +32,16 @@ pipeline {
                     echo "--- Java ---";    java -version
                     echo "--- Maven ---";   ./mvnw -version
                     echo "--- Docker ---";  docker --version
-                    docker info > /dev/null 2>&1 || { echo "ERROR: Docker daemon not reachable. Start Docker Desktop."; exit 1; }
+                    docker info > /dev/null 2>&1 || { 
+                        echo "ERROR: Docker daemon not reachable. Start Docker Desktop."; exit 1; 
+                    }
                     echo "--- Compose ---"; docker compose version
                     docker compose config --quiet
                     echo "Preflight OK"
                 '''
             }
         }
-        
+
         stage('Checkout') {
             steps {
                 script {
@@ -48,6 +50,18 @@ pipeline {
                     env.GIT_COMMIT_MSG = sh(returnStdout: true, script: 'git log -1 --pretty=%s').trim()
                 }
                 echo "Commit ${env.GIT_COMMIT_SHORT}: ${env.GIT_COMMIT_MSG}"
+            }
+        }
+
+
+        stage('Maven Test') {
+            steps {
+                sh './mvnw -B -ntp test'
+            }
+            post {
+                always {
+                    junit testResults: 'target/surefire-reports/TEST-*.xml', allowEmptyResults: false
+                }
             }
         }
 
@@ -61,18 +75,7 @@ pipeline {
                 }
             }
         }
-
-        stage('Maven Test') {
-            steps {
-                sh './mvnw -B -ntp test'
-            }
-            post {
-                always {
-                    junit testResults: 'target/surefire-reports/TEST-*.xml', allowEmptyResults: false
-                }
-            }
-        }
-
+    
         stage('Coverage Report') {
             steps {
                 sh './mvnw -B -ntp jacoco:report'
