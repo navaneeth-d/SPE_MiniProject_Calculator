@@ -53,7 +53,6 @@ pipeline {
             }
         }
 
-
         stage('Maven Test') {
             steps {
                 sh './mvnw -B -ntp test'
