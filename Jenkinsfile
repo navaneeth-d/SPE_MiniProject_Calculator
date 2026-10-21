@@ -125,6 +125,7 @@ pipeline {
 
                         # Push the image.
                         docker push "$IMAGE_NAME"
+                        docker push "$LATEST_IMAGE"
 
                         echo "Docker image pushed successfully."
                     '''
