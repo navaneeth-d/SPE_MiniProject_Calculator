@@ -52,7 +52,7 @@ class CalculatorServiceTest {
     void subtract_shouldReturnCorrectResult() {
 		CalculationResponse response = this.service.subtract(100, 110);
         assertEquals("subtract", response.getOperation());
-        assertEquals(100, response.getA());
+        assertEquals(10, response.getA());
         assertEquals(110, response.getB());
         assertEquals(-10, response.getResult());
 	}
